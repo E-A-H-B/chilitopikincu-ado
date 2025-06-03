@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dragonball</title>
+    </head>
+    <body>
+        <style>
+        :root{
+            --color-primario: #eaa74a;
+            --color-secundario: #2a21ab;
+            --color-terceario: #9e4226;
+            --color-cuarto: #FFFFFF;
+            
+            --color-quinto: #ffc69a;
+        }
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color:#eaa74a;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 0;
+        }
+        header{
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            background-color: #2a21ab;
+        }
+        .search{
+            background-color:  #eaa74a;
+            border: 2px solid  #9e4226;
+            border-radius: 50px;
+            font-family: 'lusida Sans', 'lucida Sans Regular', 'Lucida Grande', 'Ñucida Sans Ubicode', Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            padding: 8px 15px;
+            color:  #9e4226;
+        }
+        .search::placeholder{
+            color: #9e4226;
+        }
+        .search:focus{
+            outline: none;
+            background-color: #ffc69a;
+        }
+        main{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .personaje{
+            width: 400px;
+            margin: 15px;
+            background-color:  #2a21ab;
+            box-shadow: 0 5px 5px black;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .personaje img{
+            width: 80%;
+            height: 400px;
+            object-fit: contain;
+        }
+        .personaje-info{
+            color: var(--color-terceario);
+            display: flex;
+            align-content: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 15px 15px 15px;
+            letter-spacing: 5px;
+            text-align: center; 
+        }
+        .personaje-info h3{
+            color: var(--color-terceario);
+            margin-top: 0;
+        }
+        .overview{
+            background-color: var(--color-primario);
+            padding: 1rem;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            max-height: 100%; 
+            transform: translateY(101%);
+            overflow-y: auto;
+            transition: transform 0.3s ease-in;
+        }
+        .personaje:hover .overview{
+            transform: translateY(0);
+        }
+        </style>
+        
+      <header>    
+    <form id="form">
+        <img src="logo.jpg" alt="logo" style="width:100px;"/>
+       <input type="text" id="search" class="search" placeholder="Buscar personaje">
+    </form>
+    </header> 
+
+    <main id="main"></main> <script>
+    const API_URL = 'https://dragonball-api.com/api/characters';
+    const main = document.getElementById('main');
+    const form = document.getElementById('form');
+    const search = document.getElementById("search");
+
+    getDBZ(API_URL);
+
+    async function getDBZ(url){
+        const res = await fetch(url);
+        const data = await res.json();
+        showDBZ(data.items || data);
+    }
+
+    function showDBZ(personajes){
+        main.innerHTML = '';
+
+        personajes.forEach(personaje => {
+            const {name, image, ki, maxKi, description, race} = personaje;
+            
+            const personajeElements = document.createElement('div');
+            personajeElements.classList.add('personaje');
+            personajeElements.innerHTML = `
+                <img src ="${image}" alt = "${name}">
+               <div class = "personaje-info">
+               <h3>${name}</h3>
+               <span>Ki: ${ki}</span>
+               <span>Max Ki: ${maxKi}</span>
+               </div>
+               <div class="overview">
+               <h3>Race: ${race}</h3>
+               <p>${description}</p>
+               </div>`;
+            main.appendChild(personajeElements);
+        });
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchTerm = search.value;
+        if (searchTerm && searchTerm !== ''){
+            getDBZ(API_URL + '?name=' + searchTerm); // Assuming API supports searching by name
+            search.value = '';
+        } else {
+            window.location.reload();
+        }
+    });
+
+    </script>
+    </body>
+</html>
