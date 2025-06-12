@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titulo</title>
+</head>
+<body>
+    <style>
+         :root{
+            --color-primario: #eaa74a;
+            --color-secundario: #2a21ab;
+            --color-terceario: #9e4226;
+            --color-cuarto: #FFFFFF;
+            
+            --color-quinto: #ffc69a;
+        }
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color:#eaa74a;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 0;
+        }
+        header{
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            background-color: #2a21ab;
+        }
+        .search{
+            background-color:  #eaa74a;
+            border: 2px solid  #9e4226;
+            border-radius: 50px;
+            font-family: 'lusida Sans', 'lucida Sans Regular', 'Lucida Grande', 'Ñucida Sans Ubicode', Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            padding: 8px 15px;
+            color:  #9e4226;
+        }
+        .search::placeholder{
+            color: #9e4226;
+        }
+        .search:focus{
+            outline: none;
+            background-color: #ffc69a;
+        }
+        main{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .user{
+            width: 400px;
+            margin: 15px;
+            background-color:  #2a21ab;
+            box-shadow: 0 5px 5px black;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .user img{
+            width: 80%;
+            height: 400px;
+            object-fit: contain;
+        }
+        .user-info{
+            color: var(--color-terceario);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 15px 15px;
+            letter-spacing: 5px;
+            text-align: center; 
+        }
+        .user-info h3{
+            color: var(--color-terceario);
+            margin-top: 0;
+        }
+        .user-info h1{
+            color: var(--color-terceario);
+            margin: 0;
+        }
+        .descripcion{
+            background-color: var(--color-primario);
+            padding: 1rem;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            max-height: 100%; 
+            transform: translateY(101%);
+            overflow-y: auto;
+            transition: transform 0.3s ease-in;
+        }
+        .user:hover .descripcion{
+            transform: translateY(0);
+        }
+    </style>
+
+    <header>
+        <form id="form">
+            <input type="text" id="search" class="search" placeholder="Buscar Personaje">
+        </form>
+    </header>
+    <main id="main">
+
+    </main>
+
+    <script>
+        const API_URL = 'https://hp-api.onrender.com/api/characters';
+        const API_URL2 = 'https://rickandmortyapi.com/api/character';
+        const main = document.getElementById('main');
+        const form = document.getElementById('form');
+        const search = document.getElementById('search');
+
+        getCharacters(API_URL, API_URL2);
+
+        async function getCharacters(hp_url, rm_url) {
+            const hp_res = await fetch(hp_url);
+            const hp_data = await hp_res.json();
+            showHPCharacters(hp_data.items || hp_data);
+
+            const rm_res = await fetch(rm_url);
+            const rm_data = await rm_res.json();
+            showRMCharacters(rm_data.results || rm_data);
+        }
+
+        function showHPCharacters(characters) {
+            main.innerHTML = '';
+            characters.forEach((char) => {
+                const { id, name, image, house, species } = char;
+                const charElement = document.createElement('div');
+                charElement.classList.add('user');
+                charElement.innerHTML = `
+                    <img src="${image}" alt="${name}">
+                    <div class="user-info">
+                        <h1>${id}</h1>
+                        <h3>${name}</h3>
+                        <br>
+                        ${house || 'Sin casa'}
+                    </div>
+                    <div class="descripcion">
+                        <p>Casa: ${house || 'Desconocida'} | Especie: ${species || 'Desconocida'}</p>
+                    </div>
+                `;
+                main.appendChild(charElement);
+            });
+        }
+
+        function showRMCharacters(characters) {
+            characters.forEach((char) => {
+                const { id, name, image, species, status, origin } = char;
+                const charElement = document.createElement('div');
+                charElement.classList.add('user');
+                charElement.innerHTML = `
+                    <img src="${image}" alt="${name}">
+                    <div class="user-info">
+                        <h1>${id}</h1>
+                        <h3>${name}</h3>
+                        <br>
+                        ${species}
+                    </div>
+                    <div class="descripcion">
+                        <p>Estado: ${status} | Especie: ${species} | Origen: ${origin.name}</p>
+                    </div>
+                `;
+                main.appendChild(charElement);
+            });
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const searchTerm = search.value.toLowerCase();
+            if (searchTerm && searchTerm !== '') {
+                getCharacters(API_URL + '?name='+ searchTerm, API_URL2 + '?name='+ searchTerm);
+                search.value = '';
+            } else {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>        
+</html>
