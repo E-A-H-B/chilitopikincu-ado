@@ -1,0 +1,317 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+$username = "root";
+$password = "";
+$servername = "localhost";
+$database = "hollow_knight";
+
+$conexion = new mysqli($servername, $username, $password, $database);
+if($conexion->connect_error){
+    die("La conexion fallo: " . $conexion->connect_error);
+}
+
+// Consultas para obtener datos de tablas relacionadas
+$sql_difficulty = "SELECT id, difficulty_level FROM difficulties";
+$result_difficulty = $conexion->query($sql_difficulty);
+
+$sql_locations = "SELECT id, area_name FROM locations";
+$result_locations = $conexion->query($sql_locations);
+
+$sql_attack_types = "SELECT id, attack_name FROM attack_types";
+$result_attack_types = $conexion->query($sql_attack_types);
+
+$sql_phases = "SELECT id, phase_count FROM phases";
+$result_phases = $conexion->query($sql_phases);
+
+$sql_rewards = "SELECT id, reward_name FROM rewards";
+$result_rewards = $conexion->query($sql_rewards);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $boss_name = $conexion->real_escape_string($_POST["boss_name"]);
+    $boss_description = $conexion->real_escape_string($_POST["boss_description"]);
+    $difficulty = $conexion->real_escape_string($_POST["difficulty"]);
+    $location = $conexion->real_escape_string($_POST["location"]);
+    $attack_type = $conexion->real_escape_string($_POST["attack_type"]);
+    $phase = $conexion->real_escape_string($_POST["phase"]);
+    $reward = $conexion->real_escape_string($_POST["reward"]);
+    $health = $conexion->real_escape_string($_POST["health"]);
+    $is_dream_boss = isset($_POST["is_dream_boss"]) ? 1 : 0;
+    $lore_notes = $conexion->real_escape_string($_POST["lore_notes"]);
+
+    $sql_insert = "INSERT INTO bosses (boss_name, boss_description, id_difficulty, id_location, 
+                  id_attack_type, id_phase, id_reward, health, is_dream_boss, lore_notes)
+                  VALUES ('$boss_name', '$boss_description', '$difficulty', '$location', 
+                  '$attack_type', '$phase', '$reward', '$health', '$is_dream_boss', '$lore_notes')";
+
+    if($conexion->query($sql_insert) === TRUE){
+        echo "<p class='success'>New boss added successfully!</p>";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        echo "<p class='error'>Error: " . $conexion->error . "</p>";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+ 
+    <title>Hollow Knight Boss Database</title>
+    <style>
+        body {
+            background-color: #1a1c2c;
+            color: #FFFFFF;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #7b73ff;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            background-color: #2b2e44;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #7b73ff;
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #7b73ff;
+        }
+        input[type="text"], input[type="number"], textarea, select {
+            padding: 8px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #3e4166;
+            color: #FFFFFF;
+        }
+        input[type="submit"] {
+            padding: 10px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #7b73ff;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #a89eff;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            background-color: #2b2e44;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #3e4166;
+        }
+        th {
+            background-color: #3e4166;
+            color: #7b73ff;
+        }
+        .success {
+            color: #00ff00;
+            text-align: center;
+            font-weight: bold;
+        }
+        .error {
+            color: #ff0000;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+      <nav class="navbar navbar-light" style="background-color: rgb(27, 133, 120);">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" style="color: rgb(55, 255, 37);">INICIO</a>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="nav navbar-nav">
+       
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad1.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 1</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="bonilla01.php">Práctica 1</a>
+              <a class="dropdown-item" href="bonilla02.php">Práctica 2</a>
+              <a class="dropdown-item" href="bonilla03.php">Práctica 3</a>
+            </div>
+          </li>
+         
+      <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad2.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 2</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="HollowKnight.php" style =" font-family: 'Alita Brush'">Práctica 4</a>
+              <a class="dropdown-item" href="bonilla05.html" style =" font-family: 'Alita Brush'">Práctica 5</a>
+              <a class="dropdown-item" href="bonilla06.php" style =" font-family: 'Alita Brush'">Práctica 6</a>
+            </div>
+          </li>
+        
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad3.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 3</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="Bonilla0.7.html">Práctica 7</a>
+              <a class="dropdown-item" href="bonilla08.html">Práctica 8</a>
+              <a class="dropdown-item" href="bonilla09.html">Práctica 9</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+    <nav class="navbar navbar-dark" style="background-color: #1a1c2c;">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="color: #7b73ff;">HOLLOW KNIGHT BOSSES</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Hollow Knight Boss Database</h1>
+        <form method="POST" id="formulario">
+            <label for="boss_name">Boss Name:</label>
+            <input type="text" id="boss_name" name="boss_name" required>
+            
+            <label for="boss_description">Description:</label>
+            <textarea id="boss_description" name="boss_description" rows="3" required></textarea>
+            
+            <label for="difficulty">Difficulty:</label>
+            <select name="difficulty" required>
+                <option value="">Select Difficulty</option>
+                <?php while ($row = $result_difficulty->fetch_assoc()) {
+                    echo "<option value='" . $row["id"] . "'>" . $row["difficulty_level"] . "</option>";
+                } ?>
+            </select>
+            
+            <label for="location">Location:</label>
+            <select name="location" required>
+                <option value="">Select Location</option>
+                <?php while ($row = $result_locations->fetch_assoc()) {
+                    echo "<option value='" . $row["id"] . "'>" . $row["area_name"] . "</option>";
+                } ?>
+            </select>
+            
+            <label for="attack_type">Primary Attack Type:</label>
+            <select name="attack_type" required>
+                <option value="">Select Attack Type</option>
+                <?php while ($row = $result_attack_types->fetch_assoc()) {
+                    echo "<option value='" . $row["id"] . "'>" . $row["attack_name"] . "</option>";
+                } ?>
+            </select>
+            
+            <label for="phase">Battle Phases:</label>
+            <select name="phase" required>
+                <option value="">Select Number of Phases</option>
+                <?php while ($row = $result_phases->fetch_assoc()) {
+                    echo "<option value='" . $row["id"] . "'>" . $row["phase_count"] . "</option>";
+                } ?>
+            </select>
+            
+            <label for="reward">Reward:</label>
+            <select name="reward" required>
+                <option value="">Select Reward</option>
+                <?php while ($row = $result_rewards->fetch_assoc()) {
+                    echo "<option value='" . $row["id"] . "'>" . $row["reward_name"] . "</option>";
+                } ?>
+            </select>
+            
+            <label for="health">Health Points:</label>
+            <input type="number" id="health" name="health" required>
+            
+            <label for="is_dream_boss">Dream Boss:</label>
+            <input type="checkbox" id="is_dream_boss" name="is_dream_boss">
+            
+            <label for="lore_notes">Lore Notes:</label>
+            <textarea id="lore_notes" name="lore_notes" rows="3"></textarea>
+            
+            <input type="submit" value="Add Boss">
+        </form>
+    </div>
+    
+    <div class="container">
+        <h2>List of Bosses</h2>
+        <table border="1">
+            <tr>
+                <th>Boss Name</th>
+                <th>Description</th>
+                <th>Difficulty</th>
+                <th>Location</th>
+                <th>Attack Type</th>
+                <th>Phases</th>
+                <th>Reward</th>
+                <th>Health</th>
+                <th>Dream Boss</th>
+                <th>Lore Notes</th>
+            </tr>
+            <?php
+            $sql = "SELECT
+                    b.boss_name,
+                    b.boss_description,
+                    d.difficulty_level,
+                    l.area_name,
+                    a.attack_name,
+                    p.phase_count,
+                    r.reward_name,
+                    b.health,
+                    b.is_dream_boss,
+                    b.lore_notes
+                FROM bosses b
+                JOIN difficulties d ON b.id_difficulty = d.id
+                JOIN locations l ON b.id_location = l.id
+                JOIN attack_types a ON b.id_attack_type = a.id
+                JOIN phases p ON b.id_phase = p.id
+                JOIN rewards r ON b.id_reward = r.id";
+                
+            $resultado = $conexion->query($sql);
+            
+            if($resultado->num_rows > 0) {
+                while ($row = $resultado->fetch_assoc()) {
+                    $dream_boss = $row['is_dream_boss'] ? 'Yes' : 'No';
+                    echo "<tr>
+                        <td>{$row['boss_name']}</td>
+                        <td>{$row['boss_description']}</td>
+                        <td>{$row['difficulty_level']}</td>
+                        <td>{$row['area_name']}</td>
+                        <td>{$row['attack_name']}</td>
+                        <td>{$row['phase_count']}</td>
+                        <td>{$row['reward_name']}</td>
+                        <td>{$row['health']}</td>
+                        <td>{$dream_boss}</td>
+                        <td>{$row['lore_notes']}</td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='10'>No bosses registered</td></tr>";
+            }
+            ?>
+        </table>
+    </div>
+</body>
+</html>

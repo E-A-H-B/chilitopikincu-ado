@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <link href="https://fonts.cdnfonts.com/css/alita-brush" rel="stylesheet">
+
+    <title>Document</title>
+    <style>
+        body{
+            background-color: rgb(234, 15, 168);
+        }
+        .pokeImg{
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            top: 50px;
+            left: 100px;
+            mix-blend-mode: multiply;
+        }
+        .pokeImg1{
+            position: absolute;
+        }
+        .placeholder{
+            width: 120px;
+            height: 50px;
+            position: absolute;
+            top: 400px;
+            left: 150px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #d42fb6d7;
+            text-align: center;
+            text-shadow: 1px;
+        }
+        button{
+            width: 50px;
+            height: 50px;
+            background-color: #d42fb6d7;
+            border-color: rgb(161, 12, 144);
+            border-radius: 50px;
+            position: absolute;
+            top: 580px;
+            left: 600px;
+        }
+
+    </style>
+</head>
+<body>
+
+ 
+<nav class="navbar navbar-light" style="background-color: rgb(27, 133, 120);">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" style="color: rgb(55, 255, 37);">INICIO</a>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="nav navbar-nav">
+       
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad1.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 1</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="bonilla01.php">Práctica 1</a>
+              <a class="dropdown-item" href="bonilla02.php">Práctica 2</a>
+              <a class="dropdown-item" href="bonilla03.php">Práctica 3</a>
+            </div>
+          </li>
+         
+      <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad2.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 2</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="HollowKnight.php" style =" font-family: 'Alita Brush'">Práctica 4</a>
+              <a class="dropdown-item" href="bonilla05.html" style =" font-family: 'Alita Brush'">Práctica 5</a>
+              <a class="dropdown-item" href="bonilla06.php" style =" font-family: 'Alita Brush'">Práctica 6</a>
+            </div>
+          </li>
+        
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="unidad3.html" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: rgb(55, 255, 37);">UNIDAD 3</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="Bonilla0.7.html">Práctica 7</a>
+              <a class="dropdown-item" href="bonilla08.html">Práctica 8</a>
+              <a class="dropdown-item" href="bonilla09.html">Práctica 9</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+    <img src="puchaamon.jpg" alt="pokebola" width="1200px">
+    <input type="text" placeholder="Raychu" id="pokeName" class="placeholder">
+    <img src="pokebola.jpg" alt="pokebola" id="pokeImg" class="pokeImg">
+
+    <div id="pokename" class="pokeimg1" style="left: 700px; top: 800px;" >Nombre</div>
+    <div id="pokeHe" class="pokeimg1" style="left: 700px; top: 850px;">Altura</div>
+    <div id="pokeWe" class="pokeimg1" style="left: 700px; top: 900px;">Peso</div>
+    <div id="poketype" class="pokeimg1" style="left: 650px; top: 600px;" >Tipo: </div>
+    <div id="pokeitem" class="pokeimg1" style="left: 650px; top: 650px;" >Habilidad: </div>
+    <div id="pokemove1" class="pokeimg1" style="left: 650px; top: 700px;" >Movimiento 1: </div>
+    <div id="pokemove2" class="pokeimg1" style="left: 650px; top: 750px;" >Movimiento 2: </div>
+    <div id="pokemove3" class="pokeimg1" style="left: 650px; top: 800px;" >Movimiento 3: </div>
+    <div id="pokemove4" class="pokeimg1" style="left: 650px; top: 850px;" >Movimiento 4: </div>
+
+
+    <button onclick="fetchPokemon()" class="button">si</button>
+    <div class="grafica">
+        <canvas id="miCanva"></canvas>
+    </div>
+    <script>
+
+
+
+
+
+
+
+        const fetchPokemon = () => {
+            const pokeNameInput = document.getElementById("pokeName");
+            let pokeName = pokeNameInput.value.toLowerCase();
+            const url = `https://pokeapi.co/api/v2/pokemon/${pokeName}`;
+            fetch(url)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        console.log(res);
+                       
+                    } else {
+                        return res.json();
+                    }
+                })
+                .then((data) => {
+                    if (data) {
+                        console.log(data);
+                        let pokeImgUrl = data.sprites.front_default;
+                        pokeImage(pokeImgUrl);
+                        let nameElement = document.getElementById('pokename');
+                        nameElement.innerHTML = `Nombre: ${data.forms[0].name}`;
+                        let heightElement = document.getElementById('pokeHe');
+                        heightElement.innerHTML = `Altura: ${data.height}`;
+                        let weightElement = document.getElementById('pokeWe');
+                        weightElement.innerHTML = `Peso: ${data.weight}`;
+                        let typeElement = document.getElementById('poketype');
+                        typeElement.innerHTML = `Tipo: ${data.types.map(type => type.type.name).join(', ')}`;
+                        let abilityElement = document.getElementById('pokeitem');
+                        abilityElement.innerHTML = `Habilidad: ${data.abilities.map(ability => ability.ability.name).join(', ')}`;
+                        let move1Element = document.getElementById('pokemove1');
+                        move1Element.innerHTML = `Movimiento 1: ${data.moves[0]?.move?.name || 'N/A'}`;
+                        let move2Element = document.getElementById('pokemove2');
+                        move2Element.innerHTML = `Movimiento 2: ${data.moves[1]?.move?.name || 'N/A'}`;
+                        let move3Element = document.getElementById('pokemove3');
+                        move3Element.innerHTML = `Movimiento 3: ${data.moves[2]?.move?.name || 'N/A'}`;
+                        let move4Element = document.getElementById('pokemove4');
+                        move4Element.innerHTML = `Movimiento 4: ${data.moves[3]?.move?.name || 'N/A'}`;
+
+                        const miCanvas = document.getElementById('miCanva').getContext("2d");
+                        if (window.miCanvas === undefined) {
+                            window.miCanvas = new Chart(miCanvas, {
+                                type: 'bar',
+                                data: {
+                                    labels: ["HP", "Attack", "Defense", "Special-A", "Special-D", "Speed"],
+                                    datasets: [
+
+
+                                    {
+                                        label: `${data.form[0].name}`,
+                                        backgroundColor: 'rgba(154,62,35,1)',
+
+                                                data:[`${data.stats[0].base_stat}`,
+                                                `${data.stats[1].base_stat}`,
+                                                `${data.stats[2].base_stat}`,
+                                                `${data.stats[3].base_stat}`,
+                                                 `${data.stats[4].base_stat}`,
+                                                `${data.stats[5].base_stat}`],
+                                        
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)',
+                                            'rgba(75, 192, 192, 1)',
+                                            'rgba(153, 102, 255, 1)',
+                                            'rgba(255, 159, 64, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            window.miCanvas.data.datasets[0].data = data.stats.map(stat => stat.base_stat);
+                            window.miCanvas.update();
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error("Hubo un error al buscar el Pokémon:", error);
+            
+                });
+        };
+
+        const pokeImage = (url) => {
+            const pokeImg = document.getElementById("pokeImg");
+            pokeImg.src = url;
+        };
+    </script>
+</body>
+</html>
